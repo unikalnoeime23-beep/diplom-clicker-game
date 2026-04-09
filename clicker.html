@@ -6,15 +6,14 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { background: #1a1a1a; color: white; text-align: center; font-family: sans-serif; }
-        #coin { width: 200px; height: 200px; background: gold; border-radius: 50%; margin: 50px auto; display: flex; align-items: center; justify-content: center; font-size: 50px; color: #b38206; cursor: pointer; border: 5px solid #b38206; }
-        button { padding: 15px 30px; font-size: 18px; background: #2ecc71; color: white; border: none; border-radius: 10px; }
+        #coin { width: 180px; height: 180px; background: gold; border-radius: 50%; margin: 50px auto; border: 10px solid #b38206; font-size: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        button { padding: 15px 30px; background: #2ecc71; color: white; border: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
     <h1>Счет: <span id="score">0</span></h1>
     <div id="coin" onclick="clickCoin()">₿</div>
-    <button onclick="saveAndExit()">СОХРАНИТЬ И ВЫЙТИ</button>
-
+    <button onclick="save()">СОХРАНИТЬ</button>
     <script>
         let tg = window.Telegram.WebApp;
         let score = 0;
@@ -23,7 +22,7 @@
             document.getElementById('score').innerText = score;
             tg.HapticFeedback.impactOccurred('light');
         }
-        function saveAndExit() {
+        function save() {
             tg.sendData(JSON.stringify({game: "Кликер", score: score}));
         }
     </script>
