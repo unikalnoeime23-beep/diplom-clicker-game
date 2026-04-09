@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { margin: 0; background: #222; color: #fff; text-align: center; font-family: sans-serif; overflow: hidden; }
+        canvas { display: block; background: #333; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <h2>Счет: <span id="score">0</span></h2>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        let tg = window.Telegram.WebApp;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = 300;
+        let score = 0, gameActive = true;
+        let player = { x: 50, y: 200, w: 30, h: 30, dy: 0, gravity: 0.6, grounded: false };
+        let obstacles = [], timer = 0;
+
+        function loop() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            player.dy += player.gravity; player.y += player.dy;
+            if (player.y + player.h > 300) { player.y = 270; player.dy = 0; player.grounded = true; }
+            timer++; if(timer > 90) { obstacles.push({x: canvas.width, y: 260, w: 20, h: 40}); timer = 0; }
+            obstacles.forEach((obs, i) => {
+                obs.x -= 5;
+                if (player.x < obs.x + obs.w && player.x + player.w > obs.x && player.y < obs.y + obs.h && player.y + player.h > obs.y) {
+                    gameActive = false;
+                    tg.sendData(JSON.stringify({game: "Раннер", score: score}));
+                    alert("Игра окончена! Счет сохранен.");
+                    tg.close();
+                }
+                if (obs.x + obs.w < 0) { obstacles.splice(i, 1); score++; document.getElementById('score').innerText = score; }
+                ctx.fillStyle = "red"; ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+            });
+            ctx.fillStyle = "gold"; ctx.fillRect(player.x, player.y, player.w, player.h);
+            requestAnimationFrame(loop);
+        }
+        window.addEventListener('touchstart', () => { if(player.grounded) { player.dy = -12; player.grounded = false; } });
+        loop();
+    </script>
+</body>
+</html>
