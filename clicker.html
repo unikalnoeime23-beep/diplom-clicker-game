@@ -6,28 +6,34 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { background: #1a1a1a; color: white; text-align: center; font-family: sans-serif; margin: 0; padding-top: 50px; }
-        #coin { width: 150px; height: 150px; background: gold; border-radius: 50%; margin: 20px auto; border: 8px solid #b38206; font-size: 60px; display: flex; align-items: center; justify-content: center; user-select: none; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        #coin { 
+            width: 150px; height: 150px; background: gold; border-radius: 50%; 
+            margin: 20px auto; border: 8px solid #b38206; font-size: 60px; 
+            display: flex; align-items: center; justify-content: center; 
+            user-select: none; cursor: pointer;
+        }
         #coin:active { transform: scale(0.9); }
-        button { padding: 15px 40px; background: #2ecc71; color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        button { 
+            padding: 15px 40px; background: #2ecc71; color: white; 
+            border: none; border-radius: 50px; font-size: 18px; 
+            font-weight: bold; cursor: pointer; margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Очки: <span id="score">0</span></h1>
     <div id="coin" onclick="clickCoin()">₿</div>
-    <br>
-    <button onclick="saveResult()">СОХРАНИТЬ</button>
+    <button onclick="sendToBot()">СОХРАНИТЬ</button>
 
     <script>
+        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
-tg.ready();
-// ...
-tg.sendData(data);
-        // Обязательно сообщаем Telegram, что приложение готово
         tg.ready();
         tg.expand();
 
         let score = 0;
 
+        // Функция клика
         function clickCoin() {
             score++;
             document.getElementById('score').innerText = score;
@@ -36,19 +42,15 @@ tg.sendData(data);
             }
         }
 
-        function saveResult() {
-            const data = JSON.stringify({ game: "Кликер", score: score });
+        // Функция отправки данных
+        function sendToBot() {
+            const dataStr = JSON.stringify({ game: "Кликер", score: score });
             
-            // Всплывающее окно для подтверждения на телефоне
-            alert("Отправка в ТГ: " + data);
+            // Всплывающее окно для проверки
+            alert("Отправляю: " + score);
             
-            // Основной метод отправки
-            tg.sendData(data);
-            
-            // Резервный метод закрытия
-            setTimeout(() => {
-                tg.close();
-            }, 500);
+            // Самая важная команда
+            tg.sendData(dataStr);
         }
     </script>
 </body>
