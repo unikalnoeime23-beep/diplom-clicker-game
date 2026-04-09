@@ -28,12 +28,11 @@
             if (player.y + player.h > 300) { player.y = 270; player.dy = 0; player.grounded = true; }
             timer++; if(timer > 90) { obstacles.push({x: canvas.width, y: 260, w: 20, h: 40}); timer = 0; }
             obstacles.forEach((obs, i) => {
-                obs.x -= 5;
+                obs.x -= 6;
                 if (player.x < obs.x + obs.w && player.x + player.w > obs.x && player.y < obs.y + obs.h && player.y + player.h > obs.y) {
                     gameActive = false;
                     tg.sendData(JSON.stringify({game: "Раннер", score: score}));
-                    alert("Игра окончена! Счет сохранен.");
-                    tg.close();
+                    setTimeout(() => { tg.close(); }, 500);
                 }
                 if (obs.x + obs.w < 0) { obstacles.splice(i, 1); score++; document.getElementById('score').innerText = score; }
                 ctx.fillStyle = "red"; ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
