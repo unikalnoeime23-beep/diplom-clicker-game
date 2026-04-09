@@ -19,7 +19,9 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        
+tg.ready();
+// ...
+tg.sendData(data);
         // Обязательно сообщаем Telegram, что приложение готово
         tg.ready();
         tg.expand();
