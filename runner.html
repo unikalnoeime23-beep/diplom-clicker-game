@@ -14,6 +14,7 @@
     <canvas id="gameCanvas"></canvas>
     <script>
         let tg = window.Telegram.WebApp;
+        tg.expand();
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = 300;
@@ -31,6 +32,7 @@
                 obs.x -= 6;
                 if (player.x < obs.x + obs.w && player.x + player.w > obs.x && player.y < obs.y + obs.h && player.y + player.h > obs.y) {
                     gameActive = false;
+                    alert("Игра окончена! Отправляем результат: " + score);
                     tg.sendData(JSON.stringify({game: "Раннер", score: score}));
                     setTimeout(() => { tg.close(); }, 500);
                 }
