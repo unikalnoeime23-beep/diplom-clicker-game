@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Diplom Clicker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+        #score { font-size: 3rem; font-weight: bold; margin-bottom: 20px; color: #f3ba2f; }
+        .coin-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            cursor: pointer;
+            user-select: none;
+        }
+        #coin {
+            width: 100%;
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 15px rgba(243, 186, 47, 0.4));
+        }
+        #coin:active { transform: scale(0.95); }
+        .plus-one {
+            position: absolute;
+            color: #f3ba2f;
+            font-size: 24px;
+            font-weight: bold;
+            animation: moveUp 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes moveUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-100px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="score">0</div>
+    <div class="coin-container" id="coin-btn">
+        <img id="coin" src="https://img.icons8.com/emoji/256/gold-coin-emoji.png" alt="Coin">
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        let score = 0;
+        const scoreElement = document.getElementById('score');
+        const coinBtn = document.getElementById('coin-btn');
+
+        tg.expand(); // Разворачиваем на весь экран
+        tg.MainButton.setText("ЗАКРЫТЬ ИГРУ").show();
+        tg.MainButton.onClick(() => tg.close());
+
+        coinBtn.addEventListener('click', (e) => {
+            score++;
+            scoreElement.innerText = score;
+
+            // Эффект вылетающей единички
+            const plus = document.createElement('div');
+            plus.innerText = '+1';
+            plus.className = 'plus-one';
+            plus.style.left = e.clientX - 20 + 'px';
+            plus.style.top = e.clientY - 20 + 'px';
+            document.body.appendChild(plus);
+            
+            setTimeout(() => plus.remove(), 500);
+            
+            // Легкая вибрация телефона (если поддерживается)
+            tg.HapticFeedback.impactOccurred('medium');
+        });
+    </script>
+</body>
+</html>
